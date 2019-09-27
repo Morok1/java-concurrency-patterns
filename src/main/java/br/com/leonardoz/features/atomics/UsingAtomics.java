@@ -32,6 +32,8 @@ public class UsingAtomics {
 	static class AtomicCounter {
 		private AtomicInteger atomicInteger = new AtomicInteger(0);
 
+		public void addAndGet(){atomicInteger.addAndGet(1);}
+
 		public void increment() {
 			atomicInteger.incrementAndGet();
 		}
@@ -48,10 +50,14 @@ public class UsingAtomics {
 	public static void main(String[] args) throws InterruptedException {
 		var counter = new AtomicCounter();
 		var cachedThreadPool = Executors.newCachedThreadPool();
+
 		for (int i = 0; i < 10_000; i++) {
 			cachedThreadPool.execute(() -> counter.increment());
+			cachedThreadPool.execute(() -> counter.addAndGet());
 		}
+
 		cachedThreadPool.shutdown();
+
 		cachedThreadPool.awaitTermination(4000, TimeUnit.SECONDS);
 		System.out.println("Result shound be 10000: Actual result is: " + counter.get());
 	}
