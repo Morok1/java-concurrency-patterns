@@ -143,8 +143,10 @@ public class UsingCompletableFuture {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		var random = new Random();
 		var executor = Executors.newCachedThreadPool();
+
+		Supplier<Integer> supplier = () -> random.nextInt(10);
 		// Creating
-		CompletableFuture<Integer> randomNum = CompletableFuture.supplyAsync(() -> random.nextInt(140), executor);
+		CompletableFuture<Integer> randomNum = CompletableFuture.supplyAsync(supplier, executor);
 
 		// Mapping
 		String strNum = randomNum.thenApplyAsync(n -> Integer.toString(n), executor).get();
@@ -206,6 +208,10 @@ public class UsingCompletableFuture {
 			.acceptEitherAsync(CompletableFuture.supplyAsync(getVal2, executor), (firstToBeReady) -> System.out.println(firstToBeReady), executor);
 		executor.shutdown();
 		executor.awaitTermination(3000, TimeUnit.SECONDS);
+	}
+
+	private static Supplier<Integer> getIntegerSupplier(Random random) {
+		return () -> random.nextInt(140);
 	}
 
 }
