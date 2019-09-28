@@ -22,7 +22,7 @@ public class UsingBarriers {
 		Runnable barrierAction = () -> System.out.println("Well done, guys!");
 
 		var executor = Executors.newCachedThreadPool();
-		var barrier = new CyclicBarrier(10, barrierAction);
+		var barrier = new CyclicBarrier(8, barrierAction);
 
 		Runnable task = () -> {
 			try {
